@@ -8,9 +8,15 @@ const Stack = createStackNavigator();
 
 const CameraStack = () =>{
     return(
-        <Stack.Navigator>
+        <Stack.Navigator
+        screenOptions = {{
+            headerStyle:{
+                backgroundColor: '#035',
+            },
+            headerTintColor: '#fd0',                
+        }}>
             <Stack.Screen 
-            name='MainMenu'
+            name='MainMenu' 
             component={MainScreen}></Stack.Screen>
             <Stack.Screen name='PictureScreen'
             component={PictureScreen}></Stack.Screen>
