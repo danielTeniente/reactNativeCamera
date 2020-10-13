@@ -54,16 +54,16 @@ class PictureScreen extends React.Component{
     );
   }
   takePicture = async function(camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await camera.takePictureAsync(options);
-      //  eslint-disable-next-line
-      const source = data.uri;
-      if (source) {
-        await camera.pausePreview();
-        console.log("picture source", source);
-        this.setState({ pausePreview:true })
-      }
-    };
+    const options = { quality: 0.5, base64: true };
+    const data = await camera.takePictureAsync(options);
+    //  eslint-disable-next-line
+    const source = data.uri;
+    if (source) {
+      await camera.pausePreview();
+      console.log("picture source", source);
+      this.setState({ pausePreview:true })
+    }
+  };
     
   resumePicture = async function(camera){
     await camera.resumePreview()    

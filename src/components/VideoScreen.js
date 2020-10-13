@@ -51,7 +51,7 @@ class VideoScreen extends React.Component{
               }}
               style={styles.preview}
               type={RNCamera.Constants.Type.back}
-              flashMode={RNCamera.Constants.FlashMode.on}
+              flashMode={RNCamera.Constants.FlashMode.off}
               androidCameraPermissionOptions={{
                 title: 'Permission to use camera',
                 message: 'We need your permission to use your camera',
@@ -64,6 +64,7 @@ class VideoScreen extends React.Component{
                 buttonPositive: 'Ok',
                 buttonNegative: 'Cancel',
               }}
+              android
             />
             <View
               style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}
@@ -76,12 +77,16 @@ class VideoScreen extends React.Component{
 
     async startRecording() {
         this.setState({ recording: true });
+        const options = { quality: RNCamera.Constants.VideoQuality["480p"]};
         // default to mp4 for android as codec is not set
-        const { uri, codec = 'mp4' } = await this.camera.recordAsync();
+        const { uri, codec = 'mp4' } = await this.camera.recordAsync(options);
+        console.log(uri)
+        this.setState({ recording: false });
     }
     
     stopRecording() {
         this.camera.stopRecording();
+
     }
 }
 
