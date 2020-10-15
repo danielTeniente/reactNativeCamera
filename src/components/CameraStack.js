@@ -16,7 +16,7 @@ const CameraStack = () =>{
             headerTintColor: '#fd0',                
         }}>
             <Stack.Screen 
-            name='MainMenu' 
+            name='MainScreen' 
             component={MainScreen}></Stack.Screen>
             <Stack.Screen name='PictureScreen'
             component={PictureScreen}></Stack.Screen>
