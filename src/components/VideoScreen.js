@@ -1,20 +1,20 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import PendingView from './PendingView';
-
+import Video from 'react-native-video';
 
 class VideoScreen extends React.Component{
 
     state = {
         
         recording: false,
-        processing: false,
+        video_path: null,
 
     }
 
     render() {
-        const { recording, processing } = this.state;
+        const { recording, video_path } = this.state;
+        console.log(video_path)
         let button = (
           <TouchableOpacity
             onPress={this.startRecording.bind(this)}
@@ -34,18 +34,13 @@ class VideoScreen extends React.Component{
             </TouchableOpacity>
           );
         }
-    
-        if (processing) {
-          button = (
-            <View style={styles.button}>
-              <ActivityIndicator animating size={18} />
-            </View>
-          );
-        }
-    
+        
+        
+
         return (
           <View style={styles.container}>
-            <RNCamera
+
+              <RNCamera
               ref={ref => {
                 this.camera = ref;
               }}
@@ -65,12 +60,31 @@ class VideoScreen extends React.Component{
                 buttonNegative: 'Cancel',
               }}
               android
-            />
-            <View
-              style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}
-            >
-              {button}
-            </View>
+              />
+              <View
+                style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}
+                >
+                {button}
+              </View>
+
+              {video_path?
+              // Reproduce el video en un pequeño espacio en la parte inferior
+              <View>
+                <Video source={{uri: video_path}}   // Can be a URL or a local file.
+                ref={(ref) => {
+                  this.player = ref
+                }}                                      // Store reference
+                onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                onError={this.videoError}               // Callback when video cannot be loaded
+                style={styles.backgroundVideo} />
+                <TouchableOpacity style={styles.button}
+                onPress={() => this.resumeVideo()}>
+                    <Text>Aceptar</Text>
+                </TouchableOpacity>
+              </View>
+                :null
+                }
+
           </View>
         );
     }
@@ -80,13 +94,18 @@ class VideoScreen extends React.Component{
         const options = { quality: RNCamera.Constants.VideoQuality["480p"]};
         // default to mp4 for android as codec is not set
         const { uri, codec = 'mp4' } = await this.camera.recordAsync(options);
-        console.log(uri)
-        this.setState({ recording: false });
+        if(uri)
+          console.log(uri)
+          this.setState({ recording: false, video_path:uri });
     }
     
     stopRecording() {
         this.camera.stopRecording();
 
+    }
+
+    resumeVideo(){
+      this.setState({video_path:null})
     }
 }
 
@@ -109,6 +128,13 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
       alignSelf: 'center',
       margin: 20,
+    },
+    backgroundVideo: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
     },
   });
 
