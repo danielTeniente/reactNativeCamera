@@ -9,11 +9,11 @@ class VideoScreen extends React.Component{
         
         recording: false,
         video_path: null,
-
+        processing: false,  
     }
 
     render() {
-        const { recording, video_path } = this.state;
+        const { recording, video_path, processing } = this.state;
         console.log(video_path)
         let button = (
           <TouchableOpacity
@@ -39,7 +39,7 @@ class VideoScreen extends React.Component{
 
         return (
           <View style={styles.container}>
-
+            {!processing?
               <RNCamera
               ref={ref => {
                 this.camera = ref;
@@ -61,6 +61,9 @@ class VideoScreen extends React.Component{
               }}
               android
               />
+              :
+              null
+            }
               <View
                 style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}
                 >
@@ -69,7 +72,8 @@ class VideoScreen extends React.Component{
 
               {video_path?
               // Reproduce el video en un pequeño espacio en la parte inferior
-              <View>
+              <View
+               style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
                 <Video source={{uri: video_path}}   // Can be a URL or a local file.
                 ref={(ref) => {
                   this.player = ref
@@ -96,7 +100,7 @@ class VideoScreen extends React.Component{
         const { uri, codec = 'mp4' } = await this.camera.recordAsync(options);
         if(uri)
           console.log(uri)
-          this.setState({ recording: false, video_path:uri });
+          this.setState({ recording: false, video_path:uri, processing:true });
     }
     
     stopRecording() {
@@ -105,7 +109,8 @@ class VideoScreen extends React.Component{
     }
 
     resumeVideo(){
-      this.setState({video_path:null})
+      this.setState({video_path:null,processing:false})
+
     }
 }
 
